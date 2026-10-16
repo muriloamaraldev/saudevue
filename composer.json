@@ -11,6 +11,7 @@
         "laravel/framework": "^13.17",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
+        "php-amqplib/php-amqplib": "^3.7",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
@@ -52,7 +53,7 @@
             "Composer\\Config::disableProcessTimeout",
             "@php -r \"file_exists('public/hot') && unlink('public/hot');\"",
             "npm run build",
-            "@php artisan serve"
+            "npx concurrently -n server,queue -c cyan,magenta \"php artisan serve\" \"php artisan queue:work\""
         ],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\PublishesEvents;
+use App\Events\PatientRegistered;
+use App\Events\PatientUpdated;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
@@ -63,10 +66,18 @@ class PatientController extends Controller
 
     /**
      * Persistir um novo paciente no tenant autenticado.
+     *
+     * A publicação do evento é a última etapa e nunca derruba a requisição:
+     * o registro já está no banco quando ela acontece.
      */
-    public function store(StorePatientRequest $request): RedirectResponse
+    public function store(StorePatientRequest $request, PublishesEvents $publisher): RedirectResponse
     {
         $paciente = $request->user()->patients()->create($request->validated());
+
+        $publisher->publish(
+            PatientRegistered::ROUTING_KEY,
+            PatientRegistered::fromPatient($paciente)->toPayload(),
+        );
 
         return Redirect::route('patients.show', $paciente)
             ->with('status', 'Paciente cadastrado.');
@@ -99,9 +110,14 @@ class PatientController extends Controller
     /**
      * Atualizar um paciente do tenant autenticado.
      */
-    public function update(UpdatePatientRequest $request, Patient $patient): RedirectResponse
+    public function update(UpdatePatientRequest $request, Patient $patient, PublishesEvents $publisher): RedirectResponse
     {
         $patient->update($request->validated());
+
+        $publisher->publish(
+            PatientUpdated::ROUTING_KEY,
+            PatientUpdated::fromPatient($patient)->toPayload(),
+        );
 
         return Redirect::route('patients.show', $patient)
             ->with('status', 'Paciente atualizado.');

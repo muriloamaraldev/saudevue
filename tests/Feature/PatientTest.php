@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Contracts\PublishesEvents;
+use App\Messaging\AmqpEventPublisher;
+use App\Messaging\NullEventPublisher;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -130,5 +133,68 @@ class PatientTest extends TestCase
             ->get('/patients')
             ->assertOk()
             ->assertDontSee($paciente->name);
+    }
+
+    public function test_patient_registration_publishes_an_event(): void
+    {
+        $publisher = new NullEventPublisher;
+        $this->app->instance(PublishesEvents::class, $publisher);
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post('/patients', [
+            'name' => 'Maria da Silva',
+            'cpf' => '529.982.247-25',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertCount(1, $publisher->publicados);
+
+        $evento = $publisher->publicados[0];
+
+        $this->assertSame('patient.registered', $evento['routing_key']);
+        $this->assertSame('patient.registered', $evento['payload']['event']);
+        $this->assertSame($user->id, $evento['payload']['data']['tenant_id']);
+        $this->assertNotNull($evento['payload']['data']['patient_id']);
+    }
+
+    public function test_patient_update_publishes_an_event(): void
+    {
+        $publisher = new NullEventPublisher;
+        $this->app->instance(PublishesEvents::class, $publisher);
+
+        $user = User::factory()->create();
+        $paciente = Patient::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user)->put("/patients/{$paciente->id}", [
+            'name' => 'Nome Alterado',
+            'cpf' => $paciente->cpf,
+            'birth_date' => $paciente->birth_date,
+        ])->assertSessionHasNoErrors();
+
+        $this->assertCount(1, $publisher->publicados);
+        $this->assertSame('patient.updated', $publisher->publicados[0]['routing_key']);
+        $this->assertSame($paciente->id, $publisher->publicados[0]['payload']['data']['patient_id']);
+    }
+
+    public function test_patient_is_saved_even_when_the_broker_is_down(): void
+    {
+        // Aponta para uma porta fechada: a conexão é recusada na hora.
+        config(['rabbitmq.port' => 1]);
+        $this->app->instance(PublishesEvents::class, new AmqpEventPublisher);
+
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post('/patients', [
+            'name' => 'Sobrevivente',
+            'cpf' => '529.982.247-25',
+        ]);
+
+        // A requisição não pode falhar por causa do broker: o registro já
+        // está no banco quando a publicação é tentada.
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('patients', [
+            'user_id' => $user->id,
+            'name' => 'Sobrevivente',
+        ]);
     }
 }
