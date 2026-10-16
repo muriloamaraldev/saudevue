@@ -48,6 +48,12 @@
             "Composer\\Config::disableProcessTimeout",
             "@php artisan dev"
         ],
+        "demo": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php -r \"file_exists('public/hot') && unlink('public/hot');\"",
+            "npm run build",
+            "@php artisan serve"
+        ],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
             "@php artisan test"
