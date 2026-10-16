@@ -12,20 +12,19 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100">
-            <nav
-                class="border-b border-gray-100 bg-white"
-            >
+        <div class="min-h-screen bg-zinc-50">
+            <nav class="border-b border-zinc-200/70 bg-white">
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex h-16 justify-between">
                         <div class="flex">
                             <!-- Logo -->
                             <div class="flex shrink-0 items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
-                                    />
+                                <Link
+                                    :href="route('dashboard')"
+                                    class="flex items-center"
+                                >
+                                    <ApplicationLogo class="block h-9 w-auto" />
                                 </Link>
                             </div>
 
@@ -47,15 +46,21 @@ const showingNavigationDropdown = ref(false);
                             <div class="relative ms-3">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
-                                        <span class="inline-flex rounded-md">
+                                        <span class="inline-flex rounded-lg">
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                                class="inline-flex items-center gap-2 rounded-lg border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-zinc-600 transition duration-150 ease-in-out hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none"
                                             >
+                                                <span
+                                                    class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold uppercase text-brand-800"
+                                                >
+                                                    {{ $page.props.auth.user.name.charAt(0) }}
+                                                </span>
+
                                                 {{ $page.props.auth.user.name }}
 
                                                 <svg
-                                                    class="-me-0.5 ms-2 h-4 w-4"
+                                                    class="-me-0.5 h-4 w-4 text-zinc-400"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 20 20"
                                                     fill="currentColor"
@@ -95,7 +100,7 @@ const showingNavigationDropdown = ref(false);
                                     showingNavigationDropdown =
                                         !showingNavigationDropdown
                                 "
-                                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                                class="inline-flex items-center justify-center rounded-lg p-2 text-zinc-500 transition duration-150 ease-in-out hover:bg-zinc-100 hover:text-zinc-700 focus:bg-zinc-100 focus:text-zinc-700 focus:outline-none"
                             >
                                 <svg
                                     class="h-6 w-6"
@@ -149,16 +154,14 @@ const showingNavigationDropdown = ref(false);
                     </div>
 
                     <!-- Responsive Settings Options -->
-                    <div
-                        class="border-t border-gray-200 pb-1 pt-4"
-                    >
+                    <div class="border-t border-zinc-200 pb-1 pt-4">
                         <div class="px-4">
                             <div
-                                class="text-base font-medium text-gray-800"
+                                class="text-base font-semibold text-zinc-900"
                             >
                                 {{ $page.props.auth.user.name }}
                             </div>
-                            <div class="text-sm font-medium text-gray-500">
+                            <div class="text-sm font-medium text-zinc-500">
                                 {{ $page.props.auth.user.email }}
                             </div>
                         </div>
@@ -180,10 +183,7 @@ const showingNavigationDropdown = ref(false);
             </nav>
 
             <!-- Page Heading -->
-            <header
-                class="bg-white shadow"
-                v-if="$slots.header"
-            >
+            <header class="border-b border-zinc-200/70 bg-white" v-if="$slots.header">
                 <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>

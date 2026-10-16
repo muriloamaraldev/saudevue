@@ -5,18 +5,25 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <div
-        class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0"
+        class="relative flex min-h-screen flex-col items-center justify-center bg-brand-glow px-4 py-12 sm:px-6 lg:px-8"
     >
-        <div>
-            <Link href="/">
-                <ApplicationLogo class="h-20 w-20 fill-current text-gray-500" />
-            </Link>
-        </div>
+        <div class="w-full sm:max-w-md">
+            <Link
+                href="/"
+                class="mb-8 flex flex-col items-center gap-3 rounded-xl transition duration-150 hover:opacity-90"
+            >
+                <ApplicationLogo class="h-14 w-14" />
 
-        <div
-            class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg"
-        >
-            <slot />
+                <span class="text-center text-lg font-semibold tracking-tight text-zinc-900">
+                    SaúdeVue
+                </span>
+            </Link>
+
+            <div
+                class="rounded-2xl bg-white p-8 shadow-card-lg ring-1 ring-zinc-900/5"
+            >
+                <slot />
+            </div>
         </div>
     </div>
 </template>
