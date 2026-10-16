@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
@@ -41,8 +41,9 @@ import { Head } from '@inertiajs/vue3';
 
                 <!-- Módulos -->
                 <div class="grid gap-6 sm:grid-cols-2">
-                    <div
-                        class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-zinc-900/5"
+                    <Link
+                        :href="route('patients.index')"
+                        class="group rounded-2xl bg-white p-6 shadow-card ring-1 ring-zinc-900/5 transition duration-150 hover:shadow-card-md hover:ring-brand-300"
                     >
                         <div
                             class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-200"
@@ -64,22 +65,23 @@ import { Head } from '@inertiajs/vue3';
                         </div>
 
                         <h4 class="mt-4 font-semibold text-zinc-900">
-                            Patients
+                            Pacientes
                         </h4>
                         <p class="mt-1 text-sm leading-relaxed text-zinc-500">
-                            Register and manage the patients of your practice.
+                            Cadastre e gerencie os pacientes do seu consultório.
                         </p>
 
                         <span
-                            class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600"
+                            class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 transition duration-150 group-hover:gap-2.5"
                         >
-                            <span class="h-1.5 w-1.5 rounded-full bg-zinc-400" />
-                            Coming soon
+                            Abrir cadastro
+                            <span aria-hidden="true">→</span>
                         </span>
-                    </div>
+                    </Link>
 
-                    <div
-                        class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-zinc-900/5"
+                    <Link
+                        :href="route('medical-records.index')"
+                        class="group rounded-2xl bg-white p-6 shadow-card ring-1 ring-zinc-900/5 transition duration-150 hover:shadow-card-md hover:ring-brand-300"
                     >
                         <div
                             class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-200"
@@ -101,19 +103,19 @@ import { Head } from '@inertiajs/vue3';
                         </div>
 
                         <h4 class="mt-4 font-semibold text-zinc-900">
-                            Medical Records
+                            Prontuários
                         </h4>
                         <p class="mt-1 text-sm leading-relaxed text-zinc-500">
-                            Keep the clinical history of each patient.
+                            Acompanhe o histórico clínico de cada paciente.
                         </p>
 
                         <span
-                            class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600"
+                            class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 transition duration-150 group-hover:gap-2.5"
                         >
-                            <span class="h-1.5 w-1.5 rounded-full bg-zinc-400" />
-                            Coming soon
+                            Ver prontuários
+                            <span aria-hidden="true">→</span>
                         </span>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </div>
